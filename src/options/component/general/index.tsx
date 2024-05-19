@@ -1,17 +1,10 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs'
+import { DeepSeekConfig } from '@/options/component/general/DeepSeek'
 
 export function General() {
   const tabs = [
@@ -30,14 +23,14 @@ export function General() {
     {
       title: 'DeepSeek',
       render: () => {
-        return 'DeepSeek'
+        return <DeepSeekConfig></DeepSeekConfig>
       },
     },
   ]
   return (
-    <div defaultValue="General" className="container pt-10">
-      <Tabs orientation="vertical" className=" grid grid-cols-[200px_1fr] h-fit gap-2">
-        <TabsList className="flex flex-col justify-start">
+    <div  className="container pt-10">
+      <Tabs defaultValue={tabs[0].title} orientation="vertical" className=" grid grid-cols-[200px_1fr] gap-2">
+        <TabsList className="flex flex-col justify-start  h-fit">
           {tabs.map(({ title }) => <TabsTrigger key={title} value={title}>{title}</TabsTrigger>)}
         </TabsList>
         {tabs.map(tab => <TabsContent key={tab.title} value={tab.title}>
