@@ -14,6 +14,6 @@ export enum AICategory {
 }
 
 export interface Message{
-  character:'ai'|'human'|'placeholder'|'system';
+  character:'ai'|'human'|'placeholder'|'system'|'user';
   content:string;
 }
