@@ -13,7 +13,7 @@ export const SidePanel = () => {
 
   const [activeAi, setActiveAi] = useState<string>('')
 
-
+  const [inputMessage, setInputMessage] = useState<string>('')
   const { chat, messages } = useChatBot(aiConfigs.find((aiConfig) => aiConfig.name === activeAi))
   const getWebContentSummary = ((textContent: string) => {
     console.log('getWebContentSummary')
@@ -47,8 +47,13 @@ export const SidePanel = () => {
       },
     )
   }
+
+  const handleSendMessage=()=>{
+    chat({character:'user',content:inputMessage})
+    setInputMessage('')
+  }
   return (
-    <main className="h-screen flex flex-col p-2">
+    <main className="h-screen flex flex-col p-2 bg-slate-50">
       <Select value={activeAi} onValueChange={setActiveAi} disabled={aiConfigs.length <= 0}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="select a AI" />
@@ -61,7 +66,7 @@ export const SidePanel = () => {
       <section className="h-[calc(100%-48px)] flex-1 flex flex-col">
         <div className="h-[calc(100%-40px)] flex-1">
           {messages.length <= 0 ? <div className="h-full flex justify-center items-center">
-              <Button variant="ghost" onClick={tigerGenerateSummary} disabled={messages.length > 0}>Generate
+              <Button variant="ghost" onClick={tigerGenerateSummary} disabled={messages.length > 0||!activeAi}>😍 Generate
                 summary</Button>
             </div> :
             <ScrollArea className="h-full w-full rounded-md border p-4">
@@ -70,8 +75,8 @@ export const SidePanel = () => {
           }
         </div>
         <div className="flex gap-2">
-          <Input className="flex-1"></Input>
-          <Button>Send</Button>
+          <Input className="flex-1" value={inputMessage} onChange={(e)=>setInputMessage(e.target.value)}></Input>
+          <Button onClick={handleSendMessage}>Send</Button>
         </div>
       </section>
     </main>
