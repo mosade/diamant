@@ -2,9 +2,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useEffect, useRef, useState } from 'react'
 import { message_trigger_generate_web_content, message_trigger_get_document } from '@/type'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { useGetAiConfig } from '@/lib/hook/useGetAiConfig'
 import { useChatBot } from '@/lib/hook/useChatBot'
+import { MessageList } from '@/sidepanel/component/MessageList'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Input } from '@/components/ui/input'
 
 export const SidePanel = () => {
   const { aiConfigs, setAiConfigs } = useGetAiConfig()
@@ -13,10 +15,9 @@ export const SidePanel = () => {
 
 
   const { chat, messages } = useChatBot(aiConfigs.find((aiConfig) => aiConfig.name === activeAi))
-  const displayedMessages = messages.filter((message) => message.character !== 'placeholder')
   const getWebContentSummary = ((textContent: string) => {
     console.log('getWebContentSummary')
-    chat({character:'placeholder',content:textContent})
+    chat({ character: 'placeholder', content: textContent })
   })
   const getWebContentSummaryRef = useRef(getWebContentSummary)
   getWebContentSummaryRef.current = getWebContentSummary
@@ -47,7 +48,7 @@ export const SidePanel = () => {
     )
   }
   return (
-    <main>
+    <main className="h-screen flex flex-col p-2">
       <Select value={activeAi} onValueChange={setActiveAi} disabled={aiConfigs.length <= 0}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="select a AI" />
@@ -57,14 +58,21 @@ export const SidePanel = () => {
             <SelectItem key={aiConfig.name} value={aiConfig.name}>{aiConfig.name}</SelectItem>))}
         </SelectContent>
       </Select>
-      <section>
-        <Button onClick={tigerGenerateSummary}>generate summary</Button>
-        {displayedMessages.map((message, index) => (
-          <Card key={index}>
-            <CardTitle>{message.character}</CardTitle>
-            <CardContent>{message.content}</CardContent>
-          </Card>
-        ))}
+      <section className="h-[calc(100%-48px)] flex-1 flex flex-col">
+        <div className="h-[calc(100%-40px)] flex-1">
+          {messages.length <= 0 ? <div className="h-full flex justify-center items-center">
+              <Button variant="ghost" onClick={tigerGenerateSummary} disabled={messages.length > 0}>Generate
+                summary</Button>
+            </div> :
+            <ScrollArea className="h-full w-full rounded-md border p-4">
+              <MessageList messages={messages}></MessageList>
+            </ScrollArea>
+          }
+        </div>
+        <div className="flex gap-2">
+          <Input className="flex-1"></Input>
+          <Button>Send</Button>
+        </div>
       </section>
     </main>
   )
