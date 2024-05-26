@@ -1,26 +1,14 @@
 import * as React from 'react'
 
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { useForm } from 'react-hook-form'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-
-interface AIBasisConfig {
-  url: string;
-  apiKey: string;
-  model: string | string[];
-}
+import { AIBasisConfig, AICategory } from '@/type'
+import { useAifConfig } from '@/lib/hook/useAifConfig'
 
 export function DeepSeekConfig() {
-  const form = useForm<AIBasisConfig>()
+  const form =useAifConfig<AIBasisConfig>(AICategory.DeepSeek)
+
   return (
     <Card>
       <CardHeader>
@@ -30,6 +18,20 @@ export function DeepSeekConfig() {
         <Form {...form}>
           <form className="space-y-8">
             <FormField
+              defaultValue='DeepSeek'
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>name</FormLabel>
+                  <FormControl>
+                    <Input readOnly  {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              defaultValue='https://api.deepseek.com'
               control={form.control}
               name="url"
               render={({ field }) => (
@@ -46,6 +48,7 @@ export function DeepSeekConfig() {
             />
             <FormField
               control={form.control}
+              defaultValue=''
               name="apiKey"
               render={({ field }) => (
                 <FormItem>
@@ -62,6 +65,7 @@ export function DeepSeekConfig() {
             <FormField
               control={form.control}
               name="model"
+              defaultValue=''
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Model</FormLabel>
