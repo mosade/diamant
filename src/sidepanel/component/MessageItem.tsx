@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
-
+import './markdown.css'
 export function MessageItem(props: { message: Message }) {
   const { message } = props
   const mdRef = useRef<ReturnType<typeof markdownit> | null>(null)
@@ -20,7 +20,7 @@ export function MessageItem(props: { message: Message }) {
     <Card className="">
       <CardContent>
         {markDownRenderedHtml ?
-          <div dangerouslySetInnerHTML={{ __html: markDownRenderedHtml }}></div>
+          <div className="markdown-body" dangerouslySetInnerHTML={{ __html: markDownRenderedHtml }}></div>
           :
           <div className="flex flex-col gap-2">
             <Skeleton className="h-4 w-[150px]" />
