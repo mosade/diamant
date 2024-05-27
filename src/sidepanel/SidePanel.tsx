@@ -53,7 +53,7 @@ export const SidePanel = () => {
     setInputMessage('')
   }
   return (
-    <main className="h-screen flex flex-col p-2 bg-slate-50">
+    <main className="h-screen flex flex-col p-2 bg-slate-50 gap-2">
       <Select value={activeAi} onValueChange={setActiveAi} disabled={aiConfigs.length <= 0}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="select a AI" />
@@ -63,8 +63,8 @@ export const SidePanel = () => {
             <SelectItem key={aiConfig.name} value={aiConfig.name}>{aiConfig.name}</SelectItem>))}
         </SelectContent>
       </Select>
-      <section className="h-[calc(100%-48px)] flex-1 flex flex-col">
-        <div className="h-[calc(100%-40px)] flex-1">
+      <section className="overflow-hidden flex-1 flex flex-col gap-2">
+        <div className="overflow-hidden flex-1">
           {messages.length <= 0 ? <div className="h-full flex justify-center items-center">
               <Button variant="ghost" onClick={tigerGenerateSummary} disabled={messages.length > 0||!activeAi}>😍 Generate
                 summary</Button>

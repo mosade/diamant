@@ -4,6 +4,7 @@ import markdownit from 'markdown-it'
 import { useEffect, useRef } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { cn } from '@/lib/utils'
 
 export function MessageItem(props: { message: Message }) {
   const { message } = props
@@ -12,11 +13,11 @@ export function MessageItem(props: { message: Message }) {
     mdRef.current = markdownit()
   }, [])
   const markDownRenderedHtml = mdRef.current?.render(message.content)
-  return <div className="flex gap-2">
+  return <div className={cn("flex gap-2 flex-col md:flex-row",message.character==='user'?"md:flex-row-reverse items-end md:items-start":'')}>
     <Avatar>
       <AvatarFallback>{message.character}</AvatarFallback>
     </Avatar>
-    <Card className="flex-1">
+    <Card className="">
       <CardContent>
         {markDownRenderedHtml ?
           <div dangerouslySetInnerHTML={{ __html: markDownRenderedHtml }}></div>
