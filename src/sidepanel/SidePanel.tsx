@@ -53,7 +53,7 @@ export const SidePanel = () => {
     setInputMessage('')
   }
   return (
-    <main className="h-screen flex flex-col p-2 bg-slate-50 gap-2">
+    <main className="h-screen flex flex-col p-2 bg-background text-foreground gap-2">
       <Select value={activeAi} onValueChange={setActiveAi} disabled={aiConfigs.length <= 0}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="select a AI" />
