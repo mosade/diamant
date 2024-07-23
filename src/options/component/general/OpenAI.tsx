@@ -30,6 +30,13 @@ export function OpenAIConfig() {
       placeholder: 'enter secret key',
       description: 'This is your ai secret key.',
     },
+    {
+      name:'model',
+      label:'Model',
+      type:'Input',
+      defaultValue:'gpt-4o',
+      placeholder:' model name',
+    }
   ]
   return <ConfigForm title="OpenAI Config" useFormReturn={form} formConfigs={formConfig} />
 }

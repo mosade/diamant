@@ -11,12 +11,12 @@ export interface FormConfig {
   defaultValue: any;
   type: 'Input';
   placeholder: string;
-  description: string;
+  description?: string;
   readOnly?: boolean;
 }
 
-export function ConfigForm(props: {title:string, useFormReturn: UseFormReturn, formConfigs: FormConfig[] }) {
-  const { useFormReturn: form, formConfigs ,title} = props
+export function ConfigForm(props: { title: string, useFormReturn: UseFormReturn, formConfigs: FormConfig[] }) {
+  const { useFormReturn: form, formConfigs, title } = props
   return <Card>
     <CardHeader>
       <CardTitle>{title}</CardTitle>
@@ -35,9 +35,9 @@ export function ConfigForm(props: {title:string, useFormReturn: UseFormReturn, f
                 <FormControl>
                   <Input readOnly={config.readOnly} placeholder={config.placeholder} {...field} />
                 </FormControl>
-                <FormDescription>
+                {config.description && <FormDescription>
                   {config.description}
-                </FormDescription>
+                </FormDescription>}
               </FormItem>
             )}
           />)}

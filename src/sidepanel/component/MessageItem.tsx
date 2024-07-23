@@ -1,7 +1,7 @@
 import { Message } from '@/type'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import markdownit from 'markdown-it'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
@@ -10,17 +10,20 @@ import './markdown.css'
 export function MessageItem(props: { message: Message }) {
   const { message } = props
   const mdRef = useRef<ReturnType<typeof markdownit> | null>(null)
-  useEffect(() => {
+  if (!mdRef.current) {
     mdRef.current = markdownit()
-  }, [])
-  const markDownRenderedHtml = mdRef.current?.render(message.content)
+  }
+  const markDownRenderedHtml =useMemo(()=>{
+    return (mdRef.current?.render(message.content))
+  },[message.content])
+
   const resolveMessageByStatus = (status: Message['status']) => {
     switch (status) {
       case 'pending':
         return <SkeletonLoading></SkeletonLoading>
       case 'success':
         if (!markDownRenderedHtml) return <SkeletonLoading></SkeletonLoading>
-        return <div className="markdown-body" dangerouslySetInnerHTML={{ __html: markDownRenderedHtml }}></div>
+        return <div className="text-sm markdown-body" dangerouslySetInnerHTML={{ __html: markDownRenderedHtml }}></div>
       case 'failed':
         return <div className="flex flex-col gap-2">
           {message.error}

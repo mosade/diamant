@@ -20,7 +20,7 @@ export function DeepSeekConfig() {
     {
       name: 'url',
       label: 'Url',
-      defaultValue: 'https://api.deepseek.ai',
+      defaultValue: 'https://api.deepseek.com',
       type: 'Input',
       placeholder: 'enter you ai url',
       description: 'This is your custom AI url.',
@@ -33,6 +33,13 @@ export function DeepSeekConfig() {
       placeholder: 'enter secret key',
       description: 'This is your ai secret key.',
     },
+    {
+      name:'model',
+      label:'Model',
+      type:'Input',
+      defaultValue:'deepseek-chat',
+      placeholder:' model name',
+    }
   ]
   return (
     <ConfigForm title="DeepSeek Config" useFormReturn={form} formConfigs={formConfig}></ConfigForm>

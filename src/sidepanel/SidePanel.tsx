@@ -12,11 +12,13 @@ import { GearIcon } from '@radix-ui/react-icons'
 
 export const SidePanel = () => {
   const { aiConfigs, setAiConfigs } = useGetAiConfig()
-  console.log('aiConfigs', aiConfigs)
   const [activeAi, setActiveAi] = useState<string>('')
 
   const [inputMessage, setInputMessage] = useState<string>('')
-  const { chat, messages } = useChatBot(aiConfigs.find((aiConfig) => aiConfig.name === activeAi))
+  const { isPending,chat, messages, resetChat } = useChatBot(aiConfigs.find((aiConfig) => aiConfig.name === activeAi))
+  const resetChatRef = useRef(resetChat)
+
+  resetChatRef.current = resetChat
   const getWebContentSummary = ((textContent: string) => {
     console.log('getWebContentSummary')
     chat({ character: 'placeholder', content: textContent, status: 'success' })
@@ -32,12 +34,23 @@ export const SidePanel = () => {
   useEffect(() => {
     const subscription = (message: any) => {
       if (message.type === message_trigger_get_document) {
-        console.log(message)
         getWebContentSummaryRef.current(message.content.textContent)
       }
     }
+    const handleTabSwitch = (activeInfo: chrome.tabs.TabActiveInfo) => {
+      window.close();
+    }
+    const urlChange = (activeInfo: any) => {
+      resetChatRef.current()
+    }
+    chrome.webNavigation.onHistoryStateUpdated.addListener(urlChange)
     chrome.runtime.onMessage.addListener(subscription)
-    return () => chrome.runtime.onMessage.removeListener(subscription)
+    chrome.tabs.onActivated.addListener(handleTabSwitch)
+    return () => {
+      chrome.runtime.onMessage.removeListener(subscription)
+      chrome.tabs.onActivated.removeListener(handleTabSwitch)
+      chrome.webNavigation.onHistoryStateUpdated.removeListener(urlChange)
+    }
   }, [])
   const tigerGenerateSummary = () => {
     chrome.tabs.query(
@@ -62,13 +75,14 @@ export const SidePanel = () => {
     setActiveAi(v)
     setCurrentUsedAi(v)
   }
-  const handleOpenOptionPage=()=>{
+  const handleOpenOptionPage = () => {
     chrome.runtime.openOptionsPage()
   }
   return (
     <main className="h-screen flex flex-col p-2 bg-background text-foreground gap-2">
       <div className="flex justify-between">
-        <Select value={activeAi} onValueChange={setCurrentActiveAi} disabled={aiConfigs.length <= 0}>
+        <Select value={activeAi} onValueChange={setCurrentActiveAi}
+                disabled={aiConfigs.length <= 0 || messages.length > 0}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="select a AI" />
           </SelectTrigger>
@@ -94,8 +108,8 @@ export const SidePanel = () => {
           }
         </div>
         <div className="flex gap-4 p-3">
-          <Input className="flex-1" value={inputMessage} onChange={(e) => setInputMessage(e.target.value)}></Input>
-          <Button onClick={handleSendMessage}>Send</Button>
+          <Input disabled={isPending} className="flex-1" value={inputMessage} onChange={(e) => setInputMessage(e.target.value)}></Input>
+          <Button disabled={isPending} onClick={handleSendMessage}>Send</Button>
         </div>
       </section>
     </main>

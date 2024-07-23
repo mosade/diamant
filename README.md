@@ -1,6 +1,6 @@
-# react-diamant
+# diamant
 
-> a chrome extension tools built with Vite + React, and Manifest v3
+> a chrome extension for summary web content
 
 ## Installing
 

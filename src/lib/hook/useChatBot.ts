@@ -4,6 +4,7 @@ import { ChatBot } from '@/lib/chatBot'
 
 export function useChatBot(aiInfo?: AIBasisConfig) {
   const [messages, setMessages] = useState<Message[]>([])
+  const [isPending, setIsPending] = useState(false)
   const chatBot = useRef<ChatBot | null>(null)
   useEffect(() => {
       if (aiInfo) {
@@ -11,22 +12,27 @@ export function useChatBot(aiInfo?: AIBasisConfig) {
       }
     },
     [aiInfo])
+  const resetChat = () => {
+    setMessages([])
+    chatBot.current?.clearMessageHistory()
+  }
   const chat = async (message: Message) => {
-    setMessages((preMessages) => {
-      return [...preMessages, message]
-    })
     if (chatBot.current) {
       try {
-        setMessages((preMessages) => [...preMessages, { character: 'ai', content: '', status: 'pending' }])
+        setIsPending(true)
+        setMessages((preMessages) => [...preMessages, message, { character: 'ai', content: '', status: 'pending' }])
         await chatBot.current.chat(message, (response) => {
           setMessages((preMessages) => {
             const newMessages = [...preMessages]
-            newMessages[newMessages.length - 1].content += response
-            newMessages[newMessages.length - 1].status = 'success'
+            newMessages[newMessages.length - 1] = {
+              ...newMessages[newMessages.length - 1],
+              content: newMessages[newMessages.length - 1].content + response,
+              status: 'success',
+            }
             return newMessages
           })
         })
-      } catch (e:any) {
+      } catch (e: any) {
         setMessages((preMessages) => {
           const newMessages = [...preMessages]
           newMessages[newMessages.length - 1].content = ''
@@ -34,11 +40,13 @@ export function useChatBot(aiInfo?: AIBasisConfig) {
           newMessages[newMessages.length - 1].error = 'Something went wrong, please try again'
           return newMessages
         })
+      } finally {
+        setIsPending(false)
       }
 
     }
   }
   return {
-    messages, setMessages, chat,
+    messages, setMessages, chat, resetChat,isPending,
   }
 }
