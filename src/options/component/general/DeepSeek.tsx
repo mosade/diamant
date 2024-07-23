@@ -1,86 +1,40 @@
 import * as React from 'react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+
 import { AIBasisConfig, AICategory } from '@/type'
 import { useAifConfig } from '@/lib/hook/useAifConfig'
+import { ConfigForm, FormConfig } from '@/options/component/general/configForm'
 
 export function DeepSeekConfig() {
-  const form =useAifConfig<AIBasisConfig>(AICategory.DeepSeek)
-
+  const form = useAifConfig<AIBasisConfig>(AICategory.DeepSeek)
+  const formConfig: FormConfig[] = [
+    {
+      name: 'name',
+      label: 'name',
+      defaultValue: 'DeepSeek',
+      type: 'Input',
+      placeholder: 'DeepSeek',
+      description: 'Name of your DeepSeek',
+      readOnly: true,
+    },
+    {
+      name: 'url',
+      label: 'Url',
+      defaultValue: 'https://api.deepseek.ai',
+      type: 'Input',
+      placeholder: 'enter you ai url',
+      description: 'This is your custom AI url.',
+    },
+    {
+      name: 'apiKey',
+      label: 'Api key',
+      defaultValue: '',
+      type: 'Input',
+      placeholder: 'enter secret key',
+      description: 'This is your ai secret key.',
+    },
+  ]
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>DeepSeek Config</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form className="space-y-8">
-            <FormField
-              defaultValue='DeepSeek'
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>name</FormLabel>
-                  <FormControl>
-                    <Input readOnly  {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              defaultValue='https://api.deepseek.com'
-              control={form.control}
-              name="url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Url</FormLabel>
-                  <FormControl>
-                    <Input placeholder="enter you ai url" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your custom AI url.
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              defaultValue=''
-              name="apiKey"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Api key</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="enter secret key" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your ai secret key.
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="model"
-              defaultValue=''
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Model</FormLabel>
-                  <FormControl>
-                    <Input placeholder="enter model" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The model you are using for AI purposes.
-                  </FormDescription>
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <ConfigForm title="DeepSeek Config" useFormReturn={form} formConfigs={formConfig}></ConfigForm>
   )
 }

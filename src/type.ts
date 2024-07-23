@@ -16,4 +16,6 @@ export enum AICategory {
 export interface Message{
   character:'ai'|'human'|'placeholder'|'system'|'user';
   content:string;
+  status:'pending'|'failed'|'success';
+  error?:string;
 }

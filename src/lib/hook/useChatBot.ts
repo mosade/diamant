@@ -16,14 +16,25 @@ export function useChatBot(aiInfo?: AIBasisConfig) {
       return [...preMessages, message]
     })
     if (chatBot.current) {
-      setMessages((preMessages) => [...preMessages, { character: 'ai', content: '' }])
-      await chatBot.current.chat(message, (response) => {
+      try {
+        setMessages((preMessages) => [...preMessages, { character: 'ai', content: '', status: 'pending' }])
+        await chatBot.current.chat(message, (response) => {
+          setMessages((preMessages) => {
+            const newMessages = [...preMessages]
+            newMessages[newMessages.length - 1].content += response
+            newMessages[newMessages.length - 1].status = 'success'
+            return newMessages
+          })
+        })
+      } catch (e:any) {
         setMessages((preMessages) => {
           const newMessages = [...preMessages]
-          newMessages[newMessages.length - 1].content += response
+          newMessages[newMessages.length - 1].content = ''
+          newMessages[newMessages.length - 1].status = 'failed'
+          newMessages[newMessages.length - 1].error = 'Something went wrong, please try again'
           return newMessages
         })
-      })
+      }
 
     }
   }

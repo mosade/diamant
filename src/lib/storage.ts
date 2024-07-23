@@ -1,7 +1,7 @@
 import { AIBasisConfig, AICategory } from '@/type'
 
 export const AIConfigToken = 'aiConfig'
-export const deepSeekStorageToken = 'DeepSeek'
+export const CurrentUsedAiToken = 'currentUsedAi'
 
 export async function getStorage(token: string) {
   return chrome.storage.local.get(token)
@@ -23,6 +23,15 @@ export async function getAllAiConfig(): Promise<{ [key:string]: AIBasisConfig }>
 }
 
 export async function setAiConfig(name: AICategory, value: any) {
-  return setStorage(AIConfigToken, { [name]: value })
+  const aiConfig = await getStorage(AIConfigToken)
+  return setStorage(AIConfigToken, {...aiConfig[AIConfigToken], [name]: value })
+}
+
+export async function setCurrentUsedAi(value: string) {
+  return setStorage(CurrentUsedAiToken, value)
+}
+export async function getCurrentUsedAi() {
+  const res=await getStorage(CurrentUsedAiToken)
+  return res[CurrentUsedAiToken]
 }
 

@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import './markdown.css'
+
 export function MessageItem(props: { message: Message }) {
   const { message } = props
   const mdRef = useRef<ReturnType<typeof markdownit> | null>(null)
@@ -13,21 +14,36 @@ export function MessageItem(props: { message: Message }) {
     mdRef.current = markdownit()
   }, [])
   const markDownRenderedHtml = mdRef.current?.render(message.content)
-  return <div className={cn("flex gap-2 flex-col md:flex-row",message.character==='user'?"md:flex-row-reverse items-end md:items-start":'')}>
+  const resolveMessageByStatus = (status: Message['status']) => {
+    switch (status) {
+      case 'pending':
+        return <SkeletonLoading></SkeletonLoading>
+      case 'success':
+        if (!markDownRenderedHtml) return <SkeletonLoading></SkeletonLoading>
+        return <div className="markdown-body" dangerouslySetInnerHTML={{ __html: markDownRenderedHtml }}></div>
+      case 'failed':
+        return <div className="flex flex-col gap-2">
+          {message.error}
+        </div>
+    }
+  }
+  return <div
+    className={cn('flex gap-2 flex-col md:flex-row', message.character === 'user' ? 'md:flex-row-reverse items-end md:items-start' : '')}>
     <Avatar>
       <AvatarFallback>{message.character}</AvatarFallback>
     </Avatar>
     <Card className="">
       <CardContent>
-        {markDownRenderedHtml ?
-          <div className="markdown-body" dangerouslySetInnerHTML={{ __html: markDownRenderedHtml }}></div>
-          :
-          <div className="flex flex-col gap-2">
-            <Skeleton className="h-4 w-[150px]" />
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[300px]" />
-          </div>}
+        {resolveMessageByStatus(message.status)}
       </CardContent>
     </Card>
+  </div>
+}
+
+export function SkeletonLoading() {
+  return <div className="flex flex-col gap-2">
+    <Skeleton className="h-4 w-[150px]" />
+    <Skeleton className="h-4 w-[250px]" />
+    <Skeleton className="h-4 w-[300px]" />
   </div>
 }

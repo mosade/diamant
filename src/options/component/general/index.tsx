@@ -5,6 +5,7 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs'
 import { DeepSeekConfig } from '@/options/component/general/DeepSeek'
+import { OpenAIConfig } from '@/options/component/general/OpenAI'
 
 export function General() {
   const tabs = [
@@ -17,7 +18,7 @@ export function General() {
     {
       title: 'OpenAI',
       render: () => {
-        return 'OpenAI'
+        return <OpenAIConfig></OpenAIConfig>
       },
     },
     {
