@@ -1,21 +1,21 @@
 import { Message } from '@/type'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import markdownit from 'markdown-it'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import './markdown.css'
 
-export function MessageItem(props: { message: Message }) {
+export const MessageItem = forwardRef<HTMLDivElement,{ message: Message }>((props, ref) => {
   const { message } = props
   const mdRef = useRef<ReturnType<typeof markdownit> | null>(null)
   if (!mdRef.current) {
     mdRef.current = markdownit()
   }
-  const markDownRenderedHtml =useMemo(()=>{
+  const markDownRenderedHtml = useMemo(() => {
     return (mdRef.current?.render(message.content))
-  },[message.content])
+  }, [message.content])
 
   const resolveMessageByStatus = (status: Message['status']) => {
     switch (status) {
@@ -41,7 +41,7 @@ export function MessageItem(props: { message: Message }) {
       </CardContent>
     </Card>
   </div>
-}
+})
 
 export function SkeletonLoading() {
   return <div className="flex flex-col gap-2">

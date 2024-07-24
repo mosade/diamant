@@ -102,9 +102,7 @@ export const SidePanel = () => {
                 Generate
                 summary</Button>
             </div> :
-            <ScrollArea className="h-full w-full rounded-md border p-4">
               <MessageList messages={messages}></MessageList>
-            </ScrollArea>
           }
         </div>
         <div className="flex gap-4 p-3">
