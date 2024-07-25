@@ -9,12 +9,12 @@ import { OpenAIConfig } from '@/options/component/general/OpenAI'
 
 export function General() {
   const tabs = [
-    {
-      title: 'General',
-      render: () => {
-        return 'General'
-      },
-    },
+    // {
+    //   title: 'General',
+    //   render: () => {
+    //     return 'General'
+    //   },
+    // },
     {
       title: 'OpenAI',
       render: () => {

@@ -36,12 +36,21 @@ export class ChatBot {
     const prompt = ChatPromptTemplate.fromMessages([
       [
         'system',
-        `1. 你的任务是对提供的网页内容进行总结。
-        2. 请仔细阅读整个网页，理解其主要主题和关键信息。
-        3. 在总结中，请包括网页的主要观点、重要数据和任何显著的结论或建议。
-        4. 确保你的总结既精炼又全面，使用适合目标读者的语言和风格。
-        5. 将结果通过markdown的形式返回
-        6. 结果需要中文的形式返回`,
+        `- Please provide a thorough summary of the provided text, extracting key points and central themes. Ensure the summary is detailed and comprehensive, offering readers a clear understanding of the text's content without requiring them to read it in full. Your summary should be clear and concise, focusing on conveying the main ideas effectively.
+        - Here is a example the returned content needs to follow the following structure :
+        "
+         ### 全文总结
+         本文介绍了..........
+         ### 要点
+         1. xxxxxx
+         2. xxxxxx
+         ### 观点
+         1. xxxxxx
+         2. xxxxxx
+        "
+        - Return the result as markdown
+        - Return the result in Chinese
+        `,
       ],
       ['placeholder', '{chat_history}'],
       ['human', '{input}'],
